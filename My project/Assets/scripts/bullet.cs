@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class bullet : MonoBehaviour
@@ -8,22 +9,26 @@ public class bullet : MonoBehaviour
     Vector3 direction = new Vector3(1, 0, 0);
     float speed;
 
-
-
-
     void Start()
     {
         speed = 15.0f;
-        Destroy(gameObject, 2);
-
+        Destroy(gameObject, 2f);
     }
 
-    // Update is called once per frame
     void Update()
     {
         velocity = direction * speed * Time.deltaTime;
         transform.position += velocity;
+    }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("enemy"))
+        {
+            Debug.Log("Enemy geraakt!");
+            Destroy(other.gameObject); // Verwijder de tank
+            Destroy(this.gameObject);  // Verwijder de kogel
+        }
     }
 
     public Vector3 Direction
@@ -31,5 +36,4 @@ public class bullet : MonoBehaviour
         get { return direction; }
         set { direction = value; }
     }
-
 }
